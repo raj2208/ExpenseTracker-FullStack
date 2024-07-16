@@ -2,7 +2,6 @@ const path = require("path");
 const Expense = require("../models/expenseModel");
 const User = require("../models/userModel");
 const sequelize = require("../util/database");
-const database = require("../util/database");
 
 exports.getHomePage = async (req, res, next) => {
   try {
@@ -60,6 +59,26 @@ exports.getAllExpenses = async (req, res, next) => {
   try {
     const expenses = await Expense.findAll({ where: { userId: req.user.id } });
     res.json(expenses);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.getAllExpensesforPagination = async (req, res, next) => {
+  try {
+    const pageNo = req.params.page;
+    const limit = 10;
+    const offset = (pageNo - 1) * limit;
+    const totalExpenses = await Expense.count({
+      where: { userId: req.user.id },
+    });
+    const totalPages = Math.ceil(totalExpenses / limit);
+    const expenses = await Expense.findAll({
+      where: { userId: req.user.id },
+      offset: offset,
+      limit: limit,
+    });
+    res.json({ expenses: expenses, totalPages: totalPages });
   } catch (err) {
     console.log(err);
   }
