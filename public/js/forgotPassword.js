@@ -3,9 +3,12 @@ const resetPasswordLinkBtn = document.getElementById("resetPasswordLinkBtn");
 async function sendMail() {
   try {
     const email = document.getElementById("email").value;
-    const res = await axios.post(`http://16.171.2.212:3000/password/sendMail`, {
-      email: email,
-    });
+    const res = await axios.post(
+      `http://16.171.2.212:3000//password/sendMail`,
+      {
+        email: email,
+      }
+    );
     alert(res.data.message);
     window.location.href = "/";
   } catch (error) {
